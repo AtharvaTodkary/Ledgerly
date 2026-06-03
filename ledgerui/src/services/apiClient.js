@@ -1,20 +1,20 @@
 import axiosInstance from "./axiosInstance";
 
 const apiClient = {
-  get: (url, config) => {
-    return axiosInstance.get(url, config);
+  get: async (url, config) => {
+    return await axiosInstance.get(url, config);
   },
-  post: (url, data, config) => {
-    return axiosInstance.post(url, data, config);
+  post: async (url, data, config) => {
+    return await axiosInstance.post(url, data, config);
   },
-  put: (url, data, config) => {
-    return axiosInstance.put(url, data, config);
+  put: async (url, data, config) => {
+    return await axiosInstance.put(url, data, config);
   },
-  patch: (url, data, config) => {
-    return axiosInstance.patch(url, data, config);
+  patch: async (url, data, config) => {
+    return await axiosInstance.patch(url, data, config);
   },
-  delete: (url, config) => {
-    return axiosInstance.delete(url, config);
+  delete: async (url, config) => {
+    return await axiosInstance.delete(url, config);
   },
 };
 

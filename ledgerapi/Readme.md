@@ -59,6 +59,7 @@ npm start
 |---|---|---|---|
 | POST | `/register` | Public | Register a new user |
 | POST | `/login` | Public | Login and get tokens |
+| POST | `/logout` | Public | Logout and revoke refresh session |
 | POST | `/refresh` | Public | Refresh access token |
 | GET | `/me` | Private | Get current user |
 | PUT | `/update-password` | Private | Change password |
@@ -100,18 +101,32 @@ curl http://localhost:3000/api/auth/me \
   -H "Authorization: Bearer <your_access_token>"
 ```
 
-### Refresh Token
+### Refresh Token (Cookie First)
+```bash
+curl -X POST http://localhost:3000/api/auth/refresh \
+  -H "Content-Type: application/json" \
+  --cookie "refreshToken=<your_refresh_token>"
+```
+
+### Refresh Token (Legacy Body Fallback)
 ```bash
 curl -X POST http://localhost:3000/api/auth/refresh \
   -H "Content-Type: application/json" \
   -d '{"refreshToken":"<your_refresh_token>"}'
 ```
 
+### Logout
+```bash
+curl -X POST http://localhost:3000/api/auth/logout \
+  -H "Content-Type: application/json"
+```
+
 ## Security Notes
 
 - Passwords are hashed with bcrypt (configurable salt rounds via `BCRYPT_SALT_ROUNDS`)
 - JWT access tokens expire in 7 days (configurable via `JWT_EXPIRES_IN`)
-- Refresh tokens expire in 30 days and use a separate secret
+- Refresh tokens expire based on `REFRESH_TOKEN_EXPIRES_IN` and use a separate secret
+- Refresh tokens are rotated and validated against the stored active session token hash
 - Passwords are never returned in API responses (`select: false`)
 - Request body size is limited to 10kb
 - Role-based access control via `restrictTo("admin")` middleware

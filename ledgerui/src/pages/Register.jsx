@@ -23,9 +23,9 @@ export default function Register() {
     return undefined;
   }, [error, dispatch]);
 
-  if (isAuthenticated) {
-    window.location.href = '/dashboard';
-  }
+  // if (isAuthenticated) {
+  //   window.location.href = '/dashboard';
+  // }
 
   const onFinish = (values) => {
     dispatch(registerRequest(values));

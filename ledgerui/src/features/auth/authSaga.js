@@ -1,5 +1,6 @@
 import { call, put, takeLatest, all, fork } from 'redux-saga/effects';
 import { notification } from 'antd';
+import { STORAGE_KEYS } from '../../shared/constants';
 import {
   loginRequest,
   loginSuccess,
@@ -19,12 +20,14 @@ import {
 } from './authSlice';
 import { authApi } from './authApi';
 
+const extractAuthData = (responseData) => responseData?.data || responseData;
+
 function* handleLogin({ payload }) {
   try {
     const response = yield call(authApi.login, payload);
-    const { accessToken, user } = response.data;
+    const { accessToken, user, refreshToken } = extractAuthData(response.data);
 
-    yield put(loginSuccess({ accessToken, user }));
+    yield put(loginSuccess({ accessToken, user, refreshToken }));
     // window.location.href = '/dashboard';
   } catch (error) {
     const message = error.response?.data?.message || 'Login failed. Please check your credentials.';
@@ -36,11 +39,11 @@ function* handleLogin({ payload }) {
 function* handleRegister({ payload }) {
   try {
     const response = yield call(authApi.register, payload);
-    const { accessToken, user } = response.data;
+    const { accessToken, user, refreshToken } = extractAuthData(response.data);
 
     if (accessToken && user) {
       yield put(registerSuccess());
-      yield put(loginSuccess({ accessToken, user }));
+      yield put(loginSuccess({ accessToken, user, refreshToken }));
       window.location.href = '/dashboard';
       return;
     }
@@ -62,28 +65,34 @@ function* handleLogout() {
     window.location.href = '/login';
   } catch (error) {
     const message = error.response?.data?.message || 'Logout failed. Please try again.';
-    notification.error({ message: 'Logout Failed', description: message });
+    notification.warning({ message: 'Logout Warning', description: `${message} Clearing local session.` });
     yield put(logoutFailure(message));
+    yield put(logoutSuccess());
+    window.location.href = '/login';
   }
 }
 
 function* handleRefreshToken() {
   try {
-    const response = yield call(authApi.refreshToken);
-    const { accessToken } = response.data;
-    yield put(refreshTokenSuccess({ accessToken }));
+    const fallbackRefreshToken = localStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN) || undefined;
+    const response = yield call(authApi.refreshToken, fallbackRefreshToken);
+    const { accessToken, user, refreshToken } = extractAuthData(response.data);
+    yield put(refreshTokenSuccess({ accessToken, user, refreshToken }));
   } catch (error) {
-    yield put(refreshTokenFailure());
+    const message = error.response?.data?.message || 'Session restore failed.';
+    yield put(refreshTokenFailure(message));
   }
 }
 
 function* handleRestoreSession() {
   try {
-    const response = yield call(authApi.refreshToken);
-    const { accessToken, user } = response.data;
-    yield put(restoreSessionSuccess({ accessToken, user }));
+    const fallbackRefreshToken = localStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN) || undefined;
+    const response = yield call(authApi.refreshToken, fallbackRefreshToken);
+    const { accessToken, user, refreshToken } = extractAuthData(response.data);
+    yield put(restoreSessionSuccess({ accessToken, user, refreshToken }));
   } catch (error) {
-    yield put(restoreSessionFailure());
+    const message = error.response?.data?.message || 'Unable to restore session.';
+    yield put(restoreSessionFailure(message));
   }
 }
 

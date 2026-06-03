@@ -2,7 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import AppLayout from '../../layout/AppLayout';
 import Home from '../../pages/Home';
 import NotFound from '../../pages/NotFound';
-import Login from '../../pages/Login';
+import Login from '../../pages/Login/Login';
 import Register from '../../pages/Register';
 import ProtectedRoute from '../../shared/components/ProtectedRoute';
 

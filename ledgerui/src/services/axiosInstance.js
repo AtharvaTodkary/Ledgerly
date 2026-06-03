@@ -1,6 +1,7 @@
 import axios from 'axios';
 import store from '../app/store/store';
 import { refreshTokenSuccess, refreshTokenFailure, logoutSuccess } from '../features/auth/authSlice';
+import { STORAGE_KEYS } from '../shared/constants';
 import endpoints from './endpoints';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
@@ -20,6 +21,11 @@ let pendingRequests = [];
 const processPendingRequests = (error, token = null) => {
   pendingRequests.forEach((callback) => callback(error, token));
   pendingRequests = [];
+};
+
+const buildRefreshPayload = () => {
+  const refreshToken = localStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN);
+  return refreshToken ? { refreshToken } : null;
 };
 
 axiosInstance.interceptors.request.use(
@@ -70,12 +76,13 @@ axiosInstance.interceptors.response.use(
     isRefreshing = true;
 
     try {
-      const refreshResponse = await axiosInstance.post(endpoints.auth.refresh, null, {
+      const refreshResponse = await axiosInstance.post(endpoints.auth.refresh, buildRefreshPayload(), {
         withCredentials: true,
       });
-      const { accessToken } = refreshResponse.data;
+      const authData = refreshResponse.data?.data || refreshResponse.data;
+      const { accessToken, user, refreshToken } = authData;
 
-      store.dispatch(refreshTokenSuccess({ accessToken }));
+      store.dispatch(refreshTokenSuccess({ accessToken, user, refreshToken }));
       processPendingRequests(null, accessToken);
 
       originalRequest.headers.Authorization = `Bearer ${accessToken}`;

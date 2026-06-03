@@ -14,7 +14,9 @@ export const HTTP_STATUS = {
 
 export const STORAGE_KEYS = {
   AUTH_TOKEN: 'authToken',
-  USER: 'user',
+  REFRESH_TOKEN: 'refreshToken',
+  USER_ID: 'userid',
+  USER_MAIL: 'email',
   THEME: 'theme',
 };
 
