@@ -27,6 +27,31 @@ export default function AppHeader() {
       label: 'Settings',
       onClick: () => navigate('/settings'),
     },
+    {
+      key: '/expenses',
+      label: 'Expenses',
+      onClick: () => navigate('/expenses'),
+    },
+    {
+      key: '/expenses/new',
+      label: 'New Settings',
+      onClick: () => navigate('/expenses/new'),
+    },
+    {
+      key: '/lending',
+      label: 'Lending',
+      onClick: () => navigate('/lending'),
+    },
+    {
+      key: '/lending/new',
+      label: 'New Lendings',
+      onClick: () => navigate('/lending/new'),
+    },
+    {
+      key: '/lending/payments',
+      label: 'Lendings Payments',
+      onClick: () => navigate('/lending/payments'),
+    },
   ];
 
   return (
