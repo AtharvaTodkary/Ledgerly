@@ -1,11 +1,11 @@
-import { Input } from 'antd';
-import { useField } from 'formik';
+import { Input } from "antd";
+import { useField } from "formik";
 
 const { Password, TextArea } = Input;
 
 export default function GenericInput({
   label,
-  type = 'text',
+  type = "text",
   required = false,
   ...props
 }) {
@@ -15,21 +15,29 @@ export default function GenericInput({
 
   const renderInput = () => {
     switch (type) {
-      case 'password':
+      case "password":
         return (
           <Password
             {...field}
             {...props}
-            status={hasError ? 'error' : ''}
+            style={{
+              width: "100%",
+              ...props.style,
+            }}
+            status={hasError ? "error" : ""}
           />
         );
 
-      case 'textarea':
+      case "textarea":
         return (
           <TextArea
             {...field}
             {...props}
-            status={hasError ? 'error' : ''}
+            style={{
+              width: "100%",
+              ...props.style,
+            }}
+            status={hasError ? "error" : ""}
           />
         );
 
@@ -38,28 +46,30 @@ export default function GenericInput({
           <Input
             {...field}
             {...props}
+            style={{
+              width: "100%",
+              ...props.style,
+            }}
             type={type}
-            status={hasError ? 'error' : ''}
+            status={hasError ? "error" : ""}
           />
         );
     }
   };
 
   return (
-    <div style={{ marginBottom: 20 }}>
+    <div>
       {label && (
         <label
           htmlFor={props.name}
           style={{
-            display: 'block',
+            display: "block",
             marginBottom: 8,
             fontWeight: 500,
           }}
         >
           {label}
-          {required && (
-            <span style={{ color: '#ff4d4f' }}> *</span>
-          )}
+          {required && <span style={{ color: "#ff4d4f" }}> *</span>}
         </label>
       )}
 
@@ -68,7 +78,7 @@ export default function GenericInput({
       {hasError && (
         <div
           style={{
-            color: '#ff4d4f',
+            color: "#ff4d4f",
             fontSize: 12,
             marginTop: 4,
           }}

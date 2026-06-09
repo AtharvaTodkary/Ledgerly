@@ -19,7 +19,7 @@ export default function AppLayout() {
       <Content
         style={{
           flex: 1,
-          paddingTop: '64px', // Header height
+          paddingTop: '18px', // Header height
           paddingInline: '24px',
         }}
       >

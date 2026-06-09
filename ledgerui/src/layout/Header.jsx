@@ -18,6 +18,11 @@ export default function AppHeader() {
       onClick: () => navigate('/dashboard'),
     },
     {
+      key: '/expenses',
+      label: 'Expenses',
+      onClick: () => navigate('/expenses'),
+    },
+    {
       key: '/profile',
       label: 'Profile',
       onClick: () => navigate('/profile'),

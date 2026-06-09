@@ -32,6 +32,15 @@ export const router = createBrowserRouter([
         },
       },
       {
+        path: 'expenses',
+        lazy: async () => {
+          const { default: Dashboard } = await import('../../pages/Expenses');
+          return {
+            Component: () => <ProtectedRoute element={<Dashboard />} />,
+          };
+        },
+      },
+      {
         path: 'profile',
         lazy: async () => {
           const { default: Profile } = await import('../../pages/Profile');
