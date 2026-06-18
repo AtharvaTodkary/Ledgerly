@@ -1,4 +1,4 @@
-import * as Yup from "Yup";
+import * as Yup from "yup";
 
 export const expenseFormValidation = Yup.object({
   date: Yup.date().required("Date is required"),

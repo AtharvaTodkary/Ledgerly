@@ -9,17 +9,17 @@ import GenericDatePicker from "../../shared/components/core-components/GenericDa
 
 const { Text } = Typography;
 
-const AddEditExpense = ({ onCancel }) => {
+const AddEditExpense = ({ onCancel, initialValues }) => {
   return (
     <div style={{ marginTop: 12 }}>
       <Formik
         initialValues={{
-          date: null,
-          type: undefined,
-          amount: 0,
-          category: undefined,
-          recipient: "",
-          description: "",
+          date: initialValues?.date || null,
+          type: initialValues?.type || undefined,
+          amount: initialValues?.amount || null,
+          category: initialValues?.category || undefined,
+          recipient: initialValues?.recipient || "",
+          description: initialValues?.description || "",
         }}
         validationSchema={expenseFormValidation}
         enableReinitialize
